@@ -1,4 +1,12 @@
 import { parseEvent, DomainEvent } from './events';
+import { FakeUserRepository } from './repositories/user.repository';
+import { FakeProjectRepository } from './repositories/project.repository';
+import { FakeMachineRepository } from './repositories/machine.repository';
+import { processEvent } from './notifications/engine';
+
+const users = new FakeUserRepository();
+const projects = new FakeProjectRepository();
+const machines = new FakeMachineRepository();
 
 // This is the entry point. It receives a raw payload (e.g. from EventBridge),
 // parses and validates it, then passes the typed event to your implementation.
@@ -8,9 +16,5 @@ import { parseEvent, DomainEvent } from './events';
 
 export function handler(rawEvent: unknown): unknown {
   const event: DomainEvent = parseEvent(rawEvent);
-
-  // TODO: wire your solution here
-  // Given `event`, return a list of notifications.
-  // Each notification should describe who should be notified and what happened.
-  throw new Error('Not implemented');
+  return processEvent(event, users, projects, machines);
 }
